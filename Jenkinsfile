@@ -8,5 +8,12 @@ pipeline{
                 echo 'sonar scan completed'
             }
         }
+        stage('LMS-build'){
+            steps{
+                echo 'build started'
+                sh 'cd webapp && npm install && npm run build'
+                echo 'build completed'
+            }
+        }
     }
 }
