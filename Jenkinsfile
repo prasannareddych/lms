@@ -17,13 +17,15 @@ pipeline{
         }
         stage('LMS-publish'){
             steps{
-                echo 'publish started'
-                def packageJSON = readJSON file: 'webapp/package.json'
-                def packageJSONVersion = packageJSON.version
-                echo "${packageJSONVersion}"
-                sh "zip webapp/lms-${packageJSONVersion}.zip -r webapp/dist"
-                sh "curl -v -u admin:t8LS2rs6btQz --upload-file lms-${packageJSONVersion}.zip https://nexus.chspr.in/repository/lms/"   
-                echo 'build completed'
+                script{
+                    echo 'publish started'
+                    def packageJSON = readJSON file: 'webapp/package.json'
+                    def packageJSONVersion = packageJSON.version
+                    echo "${packageJSONVersion}"
+                    sh "zip webapp/lms-${packageJSONVersion}.zip -r webapp/dist"
+                    sh "curl -v -u admin:t8LS2rs6btQz --upload-file lms-${packageJSONVersion}.zip https://nexus.chspr.in/repository/lms/"   
+                    echo 'build completed'
+                }
             }
         }
     }
