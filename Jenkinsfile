@@ -1,5 +1,6 @@
 pipeline{
-    agent any{
+    agent any
+    stages{
         stage('LMS-sonar-scan'){
             steps{
                 echo 'sonar scan started'
