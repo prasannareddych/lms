@@ -16,10 +16,12 @@ pipeline{
         }
         stage('Push Image to docker hub'){
             steps{
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                def jsonData = readJSON file: 'webapp/package.json'
-                def buildName = "prasannareddych/lms-api:${jsonData.version}"
-                sh "docker push ${buildName}"
+                script{
+                  sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                  def jsonData = readJSON file: 'webapp/package.json'
+                  def buildName = "prasannareddych/lms-api:${jsonData.version}"
+                  sh "docker push ${buildName}"
+                }
             }
         }
     }
