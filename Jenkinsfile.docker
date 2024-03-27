@@ -44,7 +44,7 @@ pipeline{
                 script{
                   
                   def jsonData = readJSON file: 'webapp/package.json'
-                  def buildName = "prasannareddych/lms-webapp:${jsonData.version}"
+                  def buildName = "prasannareddych/lms-frontend:${jsonData.version}"
                   sh "docker push ${buildName}"
                 }
             }
