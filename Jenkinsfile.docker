@@ -4,22 +4,45 @@ pipeline{
         DOCKERHUB_CREDENTIALS= credentials('dockerhubcredentials')   
     }
     stages {
-        stage('Build Image'){
+        stage ('docker-login'){
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        }
+        
+        stage('build lms-api image'){
             steps{
                 script{
-                    def jsonData = readJSON file: 'webapp/package.json'
+                    def jsonData = readJSON file: 'api/package.json'
                     def buildName = "prasannareddych/lms-api:${jsonData.version}"
                     echo "building ${buildName}"
                     sh "cd api && docker build -t ${buildName} ."
                 }
             }
         }
-        stage('Push Image to docker hub'){
+        stage('push lms-api image to docker hub'){
             steps{
                 script{
-                  sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                  def jsonData = readJSON file: 'webapp/package.json'
+                  def jsonData = readJSON file: 'api/package.json'
                   def buildName = "prasannareddych/lms-api:${jsonData.version}"
+                  sh "docker push ${buildName}"
+                }
+            }
+        }
+        stage('build lms-frontend image'){
+            steps{
+                script{
+                    def jsonData = readJSON file: 'webapp/package.json'
+                    def buildName = "prasannareddych/lms-frontend:${jsonData.version}"
+                    echo "building ${buildName}"
+                    sh "cd webapp && docker build -t ${buildName} ."
+                }
+            }
+        }
+        stage('push lms-frontend image to docker hub'){
+            steps{
+                script{
+                  
+                  def jsonData = readJSON file: 'webapp/package.json'
+                  def buildName = "prasannareddych/lms-webapp:${jsonData.version}"
                   sh "docker push ${buildName}"
                 }
             }
